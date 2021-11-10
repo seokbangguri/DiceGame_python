@@ -15,9 +15,9 @@ screen_height = 800 # 세로크기
 screen = pg.display.set_mode((screen_width, screen_height))
 
 #게임 폰트
-game_font  = pg.font.Font(None, 60)
+game_font = pg.font.Font(None, 60)
 
-sunkual_font  = pg.font.Font(None, 80)
+sunkual_font = pg.font.Font(None, 80)
 
 
 
@@ -34,7 +34,7 @@ more_img = pg.image.load("right.png") #화살표 오른쪽
 
 start_img = pg.image.load("start.png") # start 이미지
 
-background = pg.image.load("background.png") #마블 사진
+ #마블 사진
 
 
 
@@ -55,6 +55,7 @@ class Button():
         if self.rect.collidepoint(pos):
             if pg.mouse.get_pressed()[0] == 1 and self.clicked == False:
                 self.clicked = True
+                
                 action = True
 
         if pg.mouse.get_pressed()[0] == 0:
@@ -109,7 +110,7 @@ while running:
             dollar = 2500
 
     if start_button.draw():
-        print(background)
+        import background
 
 
 
