@@ -6,7 +6,7 @@ import pygame as pg
 pg.init() #초기화
 
 
-player_number = 1
+player_number = 2
 dollar = 2000
 
 #화면 크기
@@ -29,12 +29,12 @@ pg.display.set_caption("7조 모노폴리")
 
 
 #이미지 불러오기
-less_img = pg.image.load("C:/Users/changjo/Desktop/모노폴리/left.png") #화살표 왼쪽
-more_img = pg.image.load("C:/Users/changjo/Desktop/모노폴리/right.png") #화살표 오른쪽
+less_img = pg.image.load("left.png") #화살표 왼쪽
+more_img = pg.image.load("right.png") #화살표 오른쪽
 
-start_img = pg.image.load("C:/Users/changjo/Desktop/모노폴리/start.png") # start 이미지
+start_img = pg.image.load("start.png") # start 이미지
 
-background = pg.image.load("C:/Users/changjo/Documents/GitHub/seeeeeeeeveeeeeen/background.png") #마블 사진
+background = pg.image.load("background.png") #마블 사진
 
 
 
@@ -88,14 +88,25 @@ while running:
 
     if less_player_button.draw(): 
         player_number-=1
+        if player_number <= 1:
+            player_number = 2
+
     if more_player_button.draw():
         player_number+=1
+        if player_number > 4:
+            player_number = 4
+
     
 
     if less_dollar_button.draw():
         dollar -= 100
+        if dollar <= 1500:
+            dollar = 1500
+    
     if more_dollar_button.draw():
         dollar += 100
+        if dollar >= 2500:
+            dollar = 2500
 
     if start_button.draw():
         print(background)
