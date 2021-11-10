@@ -3,7 +3,6 @@
 
 import pygame as pg
 import random
-
 pg.init() #초기화
 
 #화면 크기
@@ -12,14 +11,14 @@ screen_height = 800 # 세로크기
 screen = pg.display.set_mode((screen_width, screen_height))
 
 #배경이미지
-background = pg.image.load("/Users/hongseogjin/Desktop/monopoly/background.png")
+background = pg.image.load("background.png")
 
 
 # 캐릭터 불러오기
-character1 = pg.image.load("/Users/hongseogjin/Desktop/monopoly/character/car1.png")
-character2 = pg.image.load("/Users/hongseogjin/Desktop/monopoly/character/car2.png")
-character3 = pg.image.load("/Users/hongseogjin/Desktop/monopoly/character/car3.png")
-character4 = pg.image.load("/Users/hongseogjin/Desktop/monopoly/character/car4.png")
+character1 = pg.image.load("character/car1.png")
+character2 = pg.image.load("character/car2.png")
+character3 = pg.image.load("character/car3.png")
+character4 = pg.image.load("character/car4.png")
 
 character1_size = character1.get_rect().size
 character2_size = character2.get_rect().size
@@ -45,50 +44,25 @@ character4_x_pos = screen_width / 9.5
 character4_y_pos = screen_height / 1.05
 
 #주사위 위치
-dice0= pg.image.load("/Users/hongseogjin/Desktop/monopoly/dice/dice1.png")
-dice1= pg.image.load("/Users/hongseogjin/Desktop/monopoly/dice/dice2.png")
-dice2= pg.image.load("/Users/hongseogjin/Desktop/monopoly/dice/dice3.png")
-dice3= pg.image.load("/Users/hongseogjin/Desktop/monopoly/dice/dice4.png")
-dice4= pg.image.load("/Users/hongseogjin/Desktop/monopoly/dice/dice5.png")
-dice5= pg.image.load("/Users/hongseogjin/Desktop/monopoly/dice/dice6.png")
+dice0= pg.image.load("dice/dice1.png")
+dice1= pg.image.load("dice/dice2.png")
+dice2= pg.image.load("dice/dice3.png")
+dice3= pg.image.load("dice/dice4.png")
+dice4= pg.image.load("dice/dice5.png")
+dice5= pg.image.load("dice/dice6.png")
 
 dice = [dice0,dice1,dice2,dice3,dice4,dice5]
 
 #구매하기
-buy = pg.image.load("/Users/hongseogjin/Desktop/monopoly/buy.png").convert_alpha()
+buy = pg.image.load("buy.png")
 #주사위 굴리기
-roll = pg.image.load("/Users/hongseogjin/Desktop/monopoly/roll.png").convert_alpha()
+roll = pg.image.load("roll.png")
 
 #버튼
-class button():
-    def __init__(self, x,y,image,scale):
-        width = image.get_width()
-        height = image.get_height()
-        self.image = pg.transform.scale(image,(int(width*scale),int(height*scale)))
-        self.rect = self.image.get_rect()
-        self.rect.topleft = (x,y)
-        self.clicked = False
+import player
+buy_button = player.Button(330,230,buy)
+roll_button = player.Button(170,330,roll)
 
-    def draw(self):
-        action = False
-        pos = pg.mouse.get_pos()
-        if self.rect.collidepoint(pos):
-            if pg.mouse.get_pressed()[0] == 1 and self.clicked == False:
-                self.clicked = True
-                action = True
-                print("clicked")
-                screen.blit(dice[random.randrange(0,6)],(550,370))
-                
-        if pg.mouse.get_pressed()[0] == 0:
-            self.clicked = False
-        
-        screen.blit(self.image, (self.rect.x, self.rect.y))
-
-        return action
-
-
-buy_button = button(330,230,buy,1)
-roll_button = button(170,330,roll,1)
 
 
 #화면 타이틀 설정
@@ -133,11 +107,6 @@ def maingame():
     running = True
     while running:
 
-        if buy_button.draw():
-            print("buy")
-        if roll_button.draw():
-            print("roll")
-
         for event in pg.event.get():
             if event.type == pg.QUIT: #창종료로 인한 게임종료
                 running = False # 반복문 탈출
@@ -148,12 +117,13 @@ def maingame():
         screen.blit(character2,(character2_x_pos,character2_y_pos))
         screen.blit(character3,(character3_x_pos,character3_y_pos))
         screen.blit(character4,(character4_x_pos,character4_y_pos))
-        buy_button.draw()
-        roll_button.draw()
-        #if roll_button.draw() == True:
-        #    screen.blit(dice[random.randrange(1,7)],(550,370))
-        #screen.blit(buy, (330,230))
-        #screen.blit(roll, (170,330))
+        if buy_button.draw():
+            print("buy")
+        if roll_button.draw():
+            print("roll")
+            screen.blit(dice[random.randrange(0,6)],(550,370))
+            pg.display.update()
+            pg.time.delay(2000)
         screen.blit(playernumber,playerrect)
         screen.blit(playernumber1,playerrect1)
         screen.blit(playernumber2,playerrect2)
