@@ -1,9 +1,9 @@
+#-*- coding utf-8 -*-
 ###7조 모노폴리 파이썬 프로그래밍
 
-from os import times
 import pygame as pg
 import random
-import time
+import player
 
 pg.init() #초기화
 
@@ -13,7 +13,7 @@ screen_height = 800 # 세로크기
 screen = pg.display.set_mode((screen_width, screen_height))
 
 #배경이미지
-background = pg.image.load("background.png")
+background = pg.image.load("C:/Users/changjo/Documents/GitHub/seeeeeeeeveeeeeen/background.png")
 
 
 # 캐릭터 불러오기
@@ -61,34 +61,10 @@ buy = pg.image.load("C:/Users/changjo/Documents/GitHub/seeeeeeeeveeeeeen/buy.png
 roll = pg.image.load("C:/Users/changjo/Documents/GitHub/seeeeeeeeveeeeeen/roll.png")
 
 #버튼
-class button1():
-    def __init__(self, x,y,image,scale):
-        width = image.get_width()
-        height = image.get_height()
-        self.image = pg.transform.scale(image,(int(width*scale),int(height*scale)))
-        self.rect = self.image.get_rect()
-        self.rect.topleft = (x,y)
-        self.clicked = False
 
-    def draw(self):
-        action = False
-        pos = pg.mouse.get_pos()
-        if self.rect.collidepoint(pos):
-            if pg.mouse.get_pressed()[0] == 1 and self.clicked == False:
-                
-                self.clicked = True
-                action = True
-                screen.blit(dice[random.randrange(0,6)],(550,370))
-        if pg.mouse.get_pressed()[0] == 0:
-            self.clicked = False
-        
-        screen.blit(self.image, (self.rect.x, self.rect.y))
+buy_button = player.Button(330,230,buy)
+roll_button = player.Button(170,330,roll)
 
-        return action
-
-
-buy_button = button1(330,230,buy,1)
-roll_button = button1(170,330,roll,1)
 
 
 #화면 타이틀 설정
@@ -123,46 +99,43 @@ playerrect3.center = (screen_width / 1.12, screen_height*10 / 16) # 해당 rect�
 goalasset = gulimfont.render('goal asset : ', 1 , (255,255,255))  # .render() 함수에 내용과 안티앨리어싱, 색을 전달하여 글자 이미지 생성
 assetrect = goalasset.get_rect() # 생성한 이미지의 rect 객체를 가져온다
 assetrect.center = (screen_width/ 1.12, screen_height*6/8 +50)
-import player
+
+
+
 player.num2 = gulimfont.render(str(int(player.dollar)),True,(255,255,255))
 
 
 
 #메인 루프
+def maingame():
+    running = True
+    while running:
 
-running = True
-while running:
+        for event in pg.event.get():
+            if event.type == pg.QUIT: #창종료로 인한 게임종료
+                running = False # 반복문 탈출
 
-    if buy_button.draw():
-        print("buy")
-    if roll_button.draw():
-        
-        print('roll')
-        
-    for event in pg.event.get():
-        if event.type == pg.QUIT: #창종료로 인한 게임종료
-            running = False # 반복문 탈출
+        screen.fill((0,0,0))
+        screen.blit(background, (0,0)) #게임 배경 설정
+        screen.blit(character1,(character1_x_pos,character1_y_pos))
+        screen.blit(character2,(character2_x_pos,character2_y_pos))
+        screen.blit(character3,(character3_x_pos,character3_y_pos))
+        screen.blit(character4,(character4_x_pos,character4_y_pos))
+        if buy_button.draw():
+            print("buy")
+        if roll_button.draw():
+            print("roll")
+            screen.blit(dice[random.randrange(0,6)],(550,370))
+            pg.display.update()
+            pg.time.delay(2000)
+        screen.blit(playernumber,playerrect)
+        screen.blit(playernumber1,playerrect1)
+        screen.blit(playernumber2,playerrect2)
+        screen.blit(playernumber3,playerrect3)
+        screen.blit(goalasset, assetrect)
+        screen.blit(player.num2, (screen_width/ 1.12, screen_height*6/8+80))
+        pg.display.update() #지속적으로 배경 표시
 
-    screen.fill((0,0,0))
-    screen.blit(background, (0,0)) #게임 배경 설정
-    screen.blit(character1,(character1_x_pos,character1_y_pos))
-    screen.blit(character2,(character2_x_pos,character2_y_pos))
-    screen.blit(character3,(character3_x_pos,character3_y_pos))
-    screen.blit(character4,(character4_x_pos,character4_y_pos))
-        
-        
-        #if roll_button.draw() == True:
-        #    screen.blit(dice[random.randrange(1,7)],(550,370))
-    screen.blit(buy, (330,230))
-    screen.blit(roll, (170,330))
-    screen.blit(playernumber,playerrect)
-    screen.blit(playernumber1,playerrect1)
-    screen.blit(playernumber2,playerrect2)
-    screen.blit(playernumber3,playerrect3)
-    screen.blit(goalasset, assetrect)
-    screen.blit(player.num2, (screen_width/ 1.12, screen_height*6/8+80))
-    pg.display.update() #지속적으로 배경 표시
-
-
+maingame()
 #게임 종료
 pg.quit()
