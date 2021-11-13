@@ -268,8 +268,14 @@ def maingame2():
         screen.blit(tuuurn, (screen_width/ 1.227, 10))
         pg.display.update() #지속적으로 배경 표시
 
+
+# 3인 4인 미완성
+        '''
 def maingame3():
     running = True
+    i = 1
+    x = 0
+    t = 0
     while running:
         for events in pg.event.get():
             if events.type == pg.USEREVENT:
@@ -284,14 +290,113 @@ def maingame3():
                 running = False # 반복문 탈출
         screen.fill((0,0,0))
         screen.blit(background, (0,0)) #게임 배경 설정
+        if i%3 == 1:
+            x = 0
+        elif i%3 == 2:
+            x = 1
+            t = i/2
         if buy_button.draw():
             print("buy")
         if roll_button.draw():
             print("roll")
             randomdice = random.randrange(0,6)
             screen.blit(dice[randomdice],(550,370))
+            #턴별 플레이어 이동
+            if x ==0:       #1번 플레이어
+                global character1_y_pos
+                global character1_x_pos
+                c = True
+                l = 0
+                if character1_x_pos == 30 and character1_y_pos <= 765 and character1_y_pos > 96:        
+                    character1_y_pos = character1_y_pos-((randomdice+1)*111.5)
+                    if character1_y_pos < 96:
+                        while c:
+                            character1_y_pos = character1_y_pos+111.5
+                            l += 1
+                            if character1_y_pos == 96:
+                                c = False
+                        character1_x_pos = character1_x_pos+(l*107)
+                elif character1_x_pos >= 30 and character1_x_pos < 672 and character1_y_pos == 96:
+                    character1_x_pos = character1_x_pos+((randomdice+1)*107)
+                    if character1_x_pos > 672:
+                        while c:
+                            character1_x_pos = character1_x_pos-107
+                            l += 1
+                            if character1_x_pos == 672:
+                                c = False
+                        character1_y_pos = character1_y_pos+(l*111.5)
+                
+                elif character1_x_pos == 672 and character1_y_pos >= 96 and character1_y_pos < 765:
+                    character1_y_pos = character1_y_pos+((randomdice+1)*111.5)
+                    if character1_y_pos > 765:
+                        while c:
+                            character1_y_pos = character1_y_pos-111.5
+                            l += 1
+                            if character1_y_pos == 765:
+                                c = False
+                        character1_x_pos = character1_x_pos-(l*107)
+                elif character1_x_pos <= 672 and character1_x_pos > 30 and character1_y_pos == 765:
+                    character1_x_pos = character1_x_pos-((randomdice+1)*107)
+                    if character1_x_pos < 30:
+                        while c:
+                            character1_x_pos = character1_x_pos+107
+                            l += 1
+                            if character1_x_pos == 30:
+                                c = False
+                        character1_y_pos = character1_y_pos-(l*111.5)
+                
+            if x ==1:       #2번 플레이어
+                global character2_y_pos
+                global character2_x_pos
+                c = True
+                l = 0
+                
+                if character2_x_pos == 100 and character2_y_pos <= 765 and character2_y_pos > 96:        
+                    character2_y_pos = character2_y_pos-((randomdice+1)*111.5)
+                    if character2_y_pos < 96:
+                        while c:
+                            character2_y_pos = character2_y_pos+111.5
+                            l += 1
+                            if character2_y_pos == 96:
+                                c = False
+                        character2_x_pos = character2_x_pos+(l*107)
+                elif character2_x_pos >= 100 and character2_x_pos < 742 and character2_y_pos == 96:
+                    character2_x_pos = character2_x_pos+((randomdice+1)*107)
+                    if character2_x_pos > 742:
+                        while c:
+                            character2_x_pos = character2_x_pos-107
+                            l += 1
+                            if character2_x_pos == 742:
+                                c = False
+                        character2_y_pos = character2_y_pos+(l*111.5)
+                
+                elif character2_x_pos == 742 and character2_y_pos >= 96 and character2_y_pos < 765:
+                    character2_y_pos = character2_y_pos+((randomdice+1)*111.5)
+                    if character2_y_pos > 765:
+                        while c:
+                            character2_y_pos = character2_y_pos-111.5
+                            l += 1
+                            if character2_y_pos == 765:
+                                c = False
+                        character2_x_pos = character2_x_pos-(l*107)
+                elif character2_x_pos <= 742 and character2_x_pos > 100 and character2_y_pos == 765:
+                    character2_x_pos = character2_x_pos-((randomdice+1)*107)
+                    if character2_x_pos < 100:
+                        while c:
+                            character2_x_pos = character2_x_pos+107
+                            l += 1
+                            if character2_x_pos == 100:
+                                c = False
+                        character2_y_pos = character2_y_pos-(l*111.5)
+            
+            i += 1
+            if i > 30:
+                break
             pg.display.update()
             pg.time.delay(2000)
+
+        tn = 31-i+t
+        tuuurn = gulimfont.render(str(int(tn)),True,(255,255,255))
         screen.blit(character1,(character1_x_pos,character1_y_pos))
         screen.blit(character2,(character2_x_pos,character2_y_pos))
         screen.blit(character3,(character3_x_pos,character3_y_pos))
@@ -300,6 +405,8 @@ def maingame3():
         screen.blit(playernumber2,playerrect2)
         screen.blit(goalasset, assetrect)
         screen.blit(player.num2, (screen_width/ 1.12, screen_height*6/8+80))
+        screen.blit(turn[x], (screen_width/ 1.227, screen_height*6/8+130))
+        screen.blit(tuuurn, (screen_width/ 1.227, 10))
         pg.display.update() #지속적으로 배경 표시
 
 def maingame4():
@@ -342,6 +449,7 @@ def maingame4():
         screen.blit(player.num2, (screen_width/ 1.12, screen_height*6/8+80))
         pg.display.update() #지속적으로 배경 표시
 '''
+'''
 def maingame():
     running = True
     while running:
@@ -380,9 +488,11 @@ def maingame():
 '''
 if player.player_number == 2:
     maingame2()
+'''     #미완성
 elif player.player_number == 3:
     maingame3()
 else:
     maingame4()
+'''
 #게임 종료
 pg.quit()
