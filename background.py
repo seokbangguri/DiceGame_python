@@ -6,9 +6,12 @@ import random
 import time
 
 
+
 pg.init() #초기화
 
 
+#FPS
+clock = pg.time.Clock()
 
 #화면 크기
 screen_width = 1000 # 가로크기
@@ -105,6 +108,7 @@ assetrect.center = (screen_width/ 1.12, screen_height*6/8 +50)
 import player
 player.num2 = gulimfont.render(str(int(player.dollar)),True,(255,255,255))
 
+
 #턴 표시
 turn1 = gulimfont.render('turn : player1',1,(255,255,255))
 turnrect = turn1.get_rect()
@@ -118,9 +122,19 @@ turnrect = turn4.get_rect()
 turn = [turn1,turn2,turn3,turn4]
 
 
+#buy 
 
-pg.mixer.init()
+
+
+
+
 pg.display.init()
+
+
+
+'''
+pg.mixer.init()
+
 
 playlists = list()
 playlists.append('bg1.mp3')
@@ -131,14 +145,22 @@ playlists.append('bg4.mp3')
 pg.mixer.music.load(playlists.pop())
 pg.mixer.music.set_endevent(pg.USEREVENT)
 pg.mixer.music.play()
-
+'''
 #메인 루프
 def maingame2():
     running = True
     i = 1
     x = 0
     t = 0
+    
+    #시작 금액
+    character1_asset = 1000
+    character2_asset = 1000
+    total_tax = 0
+
     while running:
+        dt = clock.tick(60) #프레임 설정
+        '''
         for events in pg.event.get():
             if events.type == pg.USEREVENT:
                 if len(playlists) > 0:
@@ -146,23 +168,36 @@ def maingame2():
         for events in pg.event.get():
             if events.type == pg.USEREVENT:
                 if len(playlists) > 0:
-                    pg.mixer.music.queue(playlists.pop())
+                    pg.mixer.music.queue(playlists.pop())'''
         for event in pg.event.get():
             if event.type == pg.QUIT: #창종료로 인한 게임종료
                 running = False # 반복문 탈출
+            
         screen.fill((0,0,0))
         screen.blit(background, (0,0)) #게임 배경 설정
+        
+        
+        
+        
         if i%2 == 1:
             x = 0
         else:
             x = 1
             t = i/2
+        
         if buy_button.draw():
             print("buy")
+
+        
+        
         if roll_button.draw():
             print("roll")
+            
             randomdice = random.randrange(0,6)
             screen.blit(dice[randomdice],(550,370))
+            
+            
+            
             #턴별 플레이어 이동
             if x ==0:       #1번 플레이어
                 global character1_y_pos
@@ -207,6 +242,26 @@ def maingame2():
                                 c = False
                         character1_y_pos = character1_y_pos-(l*111.5)
                 
+                
+                
+                #플레이어1 세금 내기
+                if character1_x_pos >= 672 and character1_y_pos == 765:
+                    total_tax += character1_asset *3 / 100
+                    character1_asset = character1_asset*97/100
+
+                #모인 세금 자산에 추가
+                if character1_x_pos < 137 and character1_y_pos == 96:
+                    character1_asset += total_tax
+                    total_tax = 0
+            
+                
+                
+                if character1_x_pos > 672 and character1_y_pos == 96:
+                    for j in range(0,2):
+                        turn[1]
+
+             
+            
             if x ==1:       #2번 플레이어
                 global character2_y_pos
                 global character2_x_pos
@@ -250,12 +305,33 @@ def maingame2():
                             if character2_x_pos == 100:
                                 c = False
                         character2_y_pos = character2_y_pos-(l*111.5)
+
+                
+                
+                #플레이어2 세금 내기
+                if character2_x_pos >= 672 and character2_y_pos == 765:
+                    total_tax += character2_asset *3 / 100
+                    character2_asset = character2_asset*97/100        
+
+                #모인 세금 자산에 추가
+                if character2_x_pos < 137 and character2_y_pos == 96:
+                    character2_asset += total_tax
+                    total_tax = 0
+
+                
+        if character1_x_pos > 672 and character1_y_pos == 96:
             
+                                
+                        
+
+
+
             i += 1
             if i > 30:
                 break
             pg.display.update()
             pg.time.delay(2000)
+        
         tn = 31-i+t
         tuuurn = gulimfont.render(str(int(tn)),True,(255,255,255))
         screen.blit(character1,(character1_x_pos,character1_y_pos))
@@ -264,8 +340,24 @@ def maingame2():
         screen.blit(playernumber1,playerrect1)
         screen.blit(goalasset, assetrect)
         screen.blit(player.num2, (screen_width/ 1.12, screen_height*6/8+80))
+        
         screen.blit(turn[x], (screen_width/ 1.227, screen_height*6/8+130))
         screen.blit(tuuurn, (screen_width/ 1.227, 10))
+
+        #플레이어 자산 표시
+        player1_asset = player.game_font.render(('$'+str(int(character1_asset))),True,(0,0,0),(255,255,255))
+        screen.blit(player1_asset,(270,535))
+
+        player2_asset = player.game_font.render(('$'+str(int(character2_asset))),True,(0,0,0),(255,255,255))
+        screen.blit(player2_asset,(420,535))
+
+
+        # 모인 세금 표시
+        total_tax1 = gulimfont.render(('total tax : $'+str(int(total_tax))),True,(255,255,255))
+        screen.blit(total_tax1,(screen_width/ 1.227, 542))
+        
+
+
         pg.display.update() #지속적으로 배경 표시
 
 
@@ -487,6 +579,7 @@ def maingame():
         pg.display.update() #지속적으로 배경 표시
 '''
 if player.player_number == 2:
+    
     maingame2()
 '''     #미완성
 elif player.player_number == 3:
