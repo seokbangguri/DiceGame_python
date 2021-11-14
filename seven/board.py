@@ -122,7 +122,7 @@ dice = 0
 
 
 #플레이어 재산
-character1_asset = 1000
+character1_asset = 100
 character2_asset = 1000
 
 
@@ -458,11 +458,12 @@ while running:
                 if (character1_asset < map_price[i] )and map[i][2] == 0:
                     
                     no = warnfont.render("You don't have enough money!",True,(255,255,255),(0,0,0))
-                    screen.blit(no,(250,465))
+                    screen.blit(no,(160,465))
                     
 
                     pg.display.update()
                     pg.time.delay(1500)
+                    
                     break
 
                 #무소유일 경우 구매   
@@ -483,7 +484,7 @@ while running:
                 elif (character1_x_pos,character1_y_pos) == (map[i][0],map[i][1]) and map[i][2] != 0 :
 
                     warn = warnfont.render("You can't buy this place!",True,(255,255,255),(0,0,0))
-                    screen.blit(warn,(220,465))
+                    screen.blit(warn,(160,465))
 
                     pg.display.update()
                     pg.time.delay(1500) 
