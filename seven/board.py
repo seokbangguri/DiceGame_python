@@ -60,7 +60,7 @@ pg.display.set_caption("성결마블")
 
 #글씨 표시
 gulimfont = pg.font.SysFont('굴림', 30) # 서체 설정
-gulimmini = pg.font.SysFont('굴림', 15)
+gulimmini = pg.font.SysFont('굴림', 18)
 warnfont = pg.font.SysFont('굴림', 50)
 
 
@@ -139,6 +139,7 @@ def goal():
         winner = 'Player2 is'
         import ending
 
+    
 # 주사위 결과에 따른 플레이어의 이동거리 계산
 p1_move = 0
 p2_move = 0
@@ -155,6 +156,7 @@ turn = 1
 #지금까지 총 턴
 turn_number = 0
 
+#bgm
 pg.display.init()
 pg.mixer.init()
 
@@ -169,6 +171,8 @@ pg.mixer.music.play()
 
 winner = 0
 
+sum_1 = 0
+sum_2 = 0
 #메인 루프
 running = True
 
@@ -178,95 +182,21 @@ while running:
         if events.type == pg.USEREVENT:
             if len(playlists) > 0:
                 pg.mixer.music.queue(playlists.pop())
+    
     for event in pg.event.get():
-         if event.type == pg.QUIT: #창종료로 인한 게임종료
+        if event.type == pg.QUIT: #창종료로 인한 게임종료
             running = False # 반복문 탈출
             
     screen.fill((0,0,0))
     screen.blit(background, (0,0)) #게임 배경 설정
     
-    if buy_button.draw():
-        print("buy")
-        
-        #player 1
-        if turn == 1:
-            for i in range(0,24):
-                if character1_asset < map_price[i] and map[i][2] != 1:
-                    no = warnfont.render("You don't have enough money!",True,(255,255,255))
-                    screen.blit(no,(200,385))
-                    pg.display.update()
-                    pg.time.delay(2000)
-                else:
-                    #무소유일 경우 구매
-                    if (character1_x_pos,character1_y_pos) == (map[i][0],map[i][1]) and map[i][2] == 0:
-                        character1_asset -= map_price[i]
-                        yes = warnfont.render("Complete!",True,(255,255,255))
-                        screen.blit(yes,(300,385))
-                        map[i][2] = 1
-                        pg.display.update()
-                        pg.time.delay(2000)
-                    #이미 소유한 땅일 경우 경고 출력
-                    elif (character1_x_pos,character1_y_pos) == (map[i][0],map[i][1]) and map[i][2] == 2:
-                        warn = warnfont.render("You can't buy this place!",True,(255,255,255))
-                        screen.blit(warn,(200,385))
-                        pg.display.update()
-                        pg.time.delay(2000)
-                       
-                
-        #player 2
-        if turn == 2:
-            for i in range(0,24):
-                if character2_asset < map_price[i] and map[i][2] != 2:
-                    no = warnfont.render("You don't have enough money!",True,(255,255,255))
-                    screen.blit(no,(200,385))
-                    pg.display.update()
-                    pg.time.delay(2000)
-                else:
-                    #무소유일 경우 구매
-                    if (character2_x_pos,character2_y_pos) == (map[i][0]+30,map[i][1]) and map[i][2] == 0:
-                        character2_asset -= map_price[i]
-                        yes = warnfont.render("Complete!",True,(255,255,255))
-                        screen.blit(yes,(300,385))
-                        map[i][2] = 2
-                        pg.display.update()
-                        pg.time.delay(2000)
-                    #이미 소유한 땅일 경우 경고 출력
-                    elif (character2_x_pos,character2_y_pos) == (map[i][0]+30,map[i][1]) and map[i][2] == 1:
-                        warn = warnfont.render("You can't buy this place!",True,(255,255,255))
-                        screen.blit(warn,(200,385))
-                        pg.display.update()
-                        pg.time.delay(2000)
-
-    player1_build = []
-    player2_build = []
-
-    for i in range(1,24):
-        if map[i][2] == 1:
-            player1_build.append(map_name[i])
-        if map[i][2] == 2:
-            player2_build.append(map_name[i])
-
-    if end_buttom.draw():
-            if turn == 1:
-                turn = 2
-            else:
-                turn = 1
-                turn_number +=1 #턴 횟수
-            if total_turn == 1: #30턴이 지나면 끝남
-                if character1_asset > character2_asset:
-                    winner = 'Player1 is'
-                    import ending
-                elif character2_asset > character1_asset:
-                    winner = 'Player2 is'
-                    import ending
-                else:
-                    winner = 'Both are'
-                    import ending
     
+    #주사위 굴리기
     if roll_button.draw():
+        
         print("roll")
         dice = random.randint(1,6)
-        sum = 0
+        
         
         #player 1 
         if turn==1:
@@ -274,6 +204,48 @@ while running:
             p1_move += dice
             if p1_move >= 24:
                 p1_move -= 24
+            
+                #월급
+                if p1_move == 0:
+                    character1_asset += 100
+                
+                    character1_x_pos = map[p1_move][0]
+                    character1_y_pos = map[p1_move][1]
+
+                elif p1_move == 1:
+                    if dice >= 2:
+                        character1_asset += 100
+
+                    character1_x_pos = map[p1_move][0]
+                    character1_y_pos = map[p1_move][1]
+
+                elif p1_move == 2:
+                    if dice >= 3:
+                        character1_asset += 100
+                    
+                    character1_x_pos = map[p1_move][0]
+                    character1_y_pos = map[p1_move][1]
+                elif p1_move == 3:
+                    if dice >= 4:
+                        character1_asset += 100
+                    
+                    character1_x_pos = map[p1_move][0]
+                    character1_y_pos = map[p1_move][1]
+
+                elif p1_move == 4:
+                    if dice >= 5:
+                        character1_asset += 100
+                    
+                    character1_x_pos = map[p1_move][0]
+                    character1_y_pos = map[p1_move][1]
+
+                elif p1_move == 5:
+                    if dice == 6:
+                        character1_asset += 100
+
+                    character1_x_pos = map[p1_move][0]
+                    character1_y_pos = map[p1_move][1]
+
             
             else:
                 character1_x_pos = map[p1_move][0]
@@ -306,66 +278,48 @@ while running:
                 elif p1_move == 6:
                     character1_asset += total_tax
                     total_tax = 0
-                    goal()
+                    
+                    if character1_asset >= player.dollar:
+                        winner = 'Player1 is'
+                        import ending
+                    if character2_asset >= player.dollar:
+                        winner = 'Player2 is'
+                        import ending
 
                 
-                #월급
-                elif p1_move == 0:
-                    character1_asset += 100
-                    goal()
-
-                elif p1_move == 1:
+                elif (map[p1_move][0],map[p1_move][1] == character1_x_pos,character1_y_pos) and (map[p1_move][2] == 2):
                     
-                    if dice >= 2:
-                        character1_asset += 100
-                        goal()
-
-                elif p1_move == 2:
+                    character2_asset += map_price[p1_move]/2
                     
-                    if dice >= 3:
-                        character1_asset += 100
-                        goal()
-
-                elif p1_move == 3:
+                    if character1_asset >= player.dollar:
+                        winner = 'Player1 is'
+                        import ending
+                    if character2_asset >= player.dollar:
+                        winner = 'Player2 is'
+                        import ending
                     
-                    if dice >= 4:
-                        character1_asset += 100
-                        goal()
+                    if character1_asset < map_price[p1_move]:
+                        for l in range(0,24):
+                            if map[l][2] == 1:
+                                sum_1 += map_price[l]
 
-                elif p1_move == 4:
-                    
-                    if dice >= 5:
-                        character1_asset += 100
-                        goal()
+                                if (sum_1 + character1_asset) < sum_1:
+                                    import ending
+                                    running = False
+                                
+                                if (sum_1 + character1_asset) >= sum_1:
+                                    character1_asset += sum_1
+                                    player1_build.clear()
+                                    character1_asset -= map_price[p1_move]/2
 
+                    elif character1_asset >= map_price[p1_move]:
+                        character1_asset -= map_price[p1_move]/2                
 
-                elif p1_move == 5:
-                    
-                    if dice == 6:
-                        character1_asset += 100
-                        goal()
-
-                #player 1
                 
-                for l in range(0,24):
-                    if (character1_x_pos,character1_y_pos) == ((map[l][0],map[l][1]) and map[l][2] == 2):
-                        character2_asset += (map_price[l]/2)
-                        goal()
-                        if character1_asset < map_price[l]:
-                            for n in range(0,24):
-                                if map[n][2] == 1:
-                                    sum += map_price[l]
-                                    if sum + character1_asset < map_price[l]:
-                                        import ending
-                                        running = False
-                                    elif sum + character1_asset >= map_price[l]:
-                                        character1_asset += sum
-                                        player1_build.clear()
-                                        character1_asset -= (map_price[l]/2)
-                        elif character1_asset >= map_price[l]:
-                            character1_asset -= map_price[l]/2
                         
-            
+                    
+                        
+                   
                     
 
     
@@ -377,6 +331,49 @@ while running:
             if p2_move >= 24:
                 p2_move -= 24 
 
+                #월급
+                if p2_move == 0:
+                    character2_asset += 100
+                
+                    character2_x_pos = map[p2_move][0]+30
+                    character2_y_pos = map[p2_move][1]
+
+                elif p2_move == 1:
+                    if dice >= 2:
+                        character2_asset += 100
+
+                    character2_x_pos = map[p2_move][0]+30
+                    character2_y_pos = map[p2_move][1]
+
+                elif p2_move == 2:
+                    if dice >= 3:
+                        character2_asset += 100
+                    
+                    character2_x_pos = map[p2_move][0]+30
+                    character2_y_pos = map[p2_move][1]
+                
+                elif p2_move == 3:
+                    if dice >= 4:
+                        character2_asset += 100
+                    
+                    character2_x_pos = map[p2_move][0]+30
+                    character2_y_pos = map[p2_move][1]
+
+                elif p2_move == 4:
+                    if dice >= 5:
+                        character2_asset += 100
+                    
+                    character2_x_pos = map[p2_move][0]+30
+                    character2_y_pos = map[p2_move][1]
+
+                elif p2_move == 5:
+                    if dice == 6:
+                        character2_asset += 100
+
+                    character2_x_pos = map[p2_move][0]+30
+                    character2_y_pos = map[p2_move][1]
+            
+            
             else:
                 character2_x_pos = map[p2_move][0]+30
                 character2_y_pos = map[p2_move][1]
@@ -407,83 +404,192 @@ while running:
                 elif p2_move == 6:
                     character2_asset += total_tax
                     total_tax = 0
-
-
-                #월급
-                elif p2_move == 0:
-                    character2_asset += 100
-
-                elif p2_move == 1:
+               
                     
-                    if dice >= 2:
-                        character2_asset += 100
-
-                elif p2_move == 2:
+                elif (map[p2_move][0]+30,map[p2_move][1] == character2_x_pos,character2_y_pos) and  (map[p2_move][2] == 1):
                     
-                    if dice >= 3:
-                        character2_asset += 100
+                    character1_asset += map_price[p2_move]/2
 
-                elif p2_move == 3:
+                    if character1_asset >= player.dollar:
+                        winner = 'Player1 is'
+                        import ending
+                    if character2_asset >= player.dollar:
+                        winner = 'Player2 is'
+                        import ending
                     
-                    if dice >= 4:
-                        character2_asset += 100
+                    if character2_asset < map_price[p2_move]:
+                        for l in range(0,24):
+                            if map[l][2] == 1:
+                                sum_2 += map_price[l]
 
-                elif p2_move == 4:
-                    
-                    if dice >= 5:
-                        character2_asset += 100
+                                if (sum_2 + character1_asset) < sum_2:
+                                    import ending
+                                    running = False
+                                
+                                if (sum_2 + character1_asset) >= sum_2:
+                                    character2_asset += sum_2
+                                    player2_build.clear()
+                                    character2_asset -= map_price[p2_move]/2
 
-
-                elif p2_move == 5:
-                    
-                    if dice == 6:
-                        character2_asset += 100   
-                    
+                    elif character2_asset >= map_price[p2_move]:
+                        character2_asset -= map_price[p2_move]/2
                 
-                #player 2
-                for l in range(0,24):
-                    if (character2_x_pos,character2_y_pos) == ((map[l][0]+30,map[l][1]) and map[l][2] == 1):
-                        character1_asset += (map_price[l]/2)
-                        goal()
-                        if character2_asset < map_price[l]/2:
-                            for n in range(0,24):
-                                if map[n][2] == 2:
-                                    sum += map_price[l]
-                                    if sum + character2_asset < map_price[l]/2:
-                                        import ending
-                                        running = False
-                                    elif sum + character2_asset >= map_price[l]/2:
-                                        character2_asset += sum
-                                        player1_build.clear()
-                                        character2_asset -= (map_price[l]/2)
-                        elif character2_asset >= map_price[l]/2:
-                            character2_asset -= map_price[l]/2
+                                        
+                        
+                        
                 
-          
+             
+        time.sleep(0.3)
+        
 
         
         
-        time.sleep(0.3) 
+        
+    
+    #구매 버튼
+    if buy_button.draw():
+        print("buy")
+
+        #player 1
+        if turn == 1:
+            for i in range(0,24):               #map[땅 숫자][2] 소유 여부  0: 무소유 1: 1번플레이어 , 2: 2번블레이어, 5: 구매 불가
+                    
+                    #플레이어 자산이 땅가격보다 낮을 때
+                if (character1_asset < map_price[i] )and map[i][2] == 0:
+                    
+                    no = warnfont.render("You don't have enough money!",True,(255,255,255),(0,0,0))
+                    screen.blit(no,(250,465))
+                    
+
+                    pg.display.update()
+                    pg.time.delay(1500)
+                    break
+
+                #무소유일 경우 구매   
+                elif (character1_x_pos,character1_y_pos) == (map[i][0],map[i][1]) and map[i][2] == 0:
+                    character1_asset -= map_price[i]
+                    
+                    yes = warnfont.render("Complete!",True,(255,255,255),(0,0,0))
+                    screen.blit(yes,(300,465))
+                        
+                    map[i][2] = 1
+                        
+                    pg.display.update()
+                    pg.time.delay(1500)
+
+                    break
+
+                #이미 소유한 땅일 경우 경고 출력
+                elif (character1_x_pos,character1_y_pos) == (map[i][0],map[i][1]) and map[i][2] != 0 :
+
+                    warn = warnfont.render("You can't buy this place!",True,(255,255,255),(0,0,0))
+                    screen.blit(warn,(220,465))
+
+                    pg.display.update()
+                    pg.time.delay(1500) 
+
+                    break  
+        
+        
+        #player 2
+        if turn == 2:
+            for i in range(0,24):               #map[땅 숫자][2] 소유 여부  0: 무소유 1: 1번플레이어 , 2: 2번블레이어, 5: 구매 불가
+                    
+                    #플레이어 자산이 땅가격보다 낮을 때
+                if (character2_asset < map_price[i] )and map[i][2] == 0:
+                    
+                    no = warnfont.render("You don't have enough money!",True,(255,255,255),(0,0,0))
+                    screen.blit(no,(250,465))
+                    
+
+                    pg.display.update()
+                    pg.time.delay(1500)
+                    break
+
+                #무소유일 경우 구매   
+                elif (character2_x_pos,character2_y_pos) == (map[i][0]+30,map[i][1]) and map[i][2] == 0:
+                    character2_asset -= map_price[i]
+                    
+                    yes = warnfont.render("Complete!",True,(255,255,255),(0,0,0))
+                    screen.blit(yes,(300,465))
+                        
+                    map[i][2] = 2
+                        
+                    pg.display.update()
+                    pg.time.delay(1500)
+
+                    break
+
+                #이미 소유한 땅일 경우 경고 출력
+                elif (character2_x_pos,character2_y_pos) == (map[i][0]+30,map[i][1]) and map[i][2] != 0 :
+
+                    warn = warnfont.render("You can't buy this place!",True,(255,255,255),(0,0,0))
+                    screen.blit(warn,(220,465))
+
+                    pg.display.update()
+                    pg.time.delay(1500) 
+
+                    break   
+                
+                
+                    
+
+    #소유한 땅
+    player1_build = []
+    player2_build = []
+
+    for i in range(1,24):
+        if map[i][2] == 1:
+            player1_build.append(map_name[i])
+
+            
+        if map[i][2] == 2:
+            player2_build.append(map_name[i])
+
+
+    
+    
+    
+    
+    if end_buttom.draw():
+            if turn == 1:
+                turn = 2
+            else:
+                turn = 1
+                turn_number +=1 #턴 횟수
+            if total_turn == 1: #30턴이 지나면 끝남
+                if character1_asset > character2_asset:
+                    winner = 'Player1 is'
+                    import ending
+                elif character2_asset > character1_asset:
+                    winner = 'Player2 is'
+                    import ending
+                else:
+                    winner = 'Both are'
+                    import ending
+    
+    
         
      
     
     
     if turn == 1: #player1 turn 폰트
-        player1_turn = gulimfont.render(str("player1 turn"),True,(255,255,255))
-        screen.blit(player1_turn,(810,770)) 
+        player1_turn = gulimfont.render(str("player1 turn"),True,(220,0,0))
+        screen.blit(player1_turn,(130,130)) 
         
         
     
     elif turn == 2: #player2 turn 폰트
         
-        player2_turn = gulimfont.render(str("player2 turn"),True,(255,255,255))
-        screen.blit(player2_turn,(810,770))
+        player2_turn = gulimfont.render(str("player2 turn"),True,(255,255,0))
+        screen.blit(player2_turn,(130,130))
         
         
 
     #플레이어 위치
     screen.blit(character1,(character1_x_pos,character1_y_pos))    
     screen.blit(character2,(character2_x_pos,character2_y_pos))    
+    
     
     #남은 턴 횟수
     total_turn = 30 - turn_number
@@ -493,24 +599,44 @@ while running:
     
     
 
-    #플레이어가 가지고 있는 건물 
+    #플레이어 남은 돈
     player1 = gulimfont.render("player1 : ",True,(255,255,255))
-    player1_bd = gulimmini.render(str(player1_build),True,(255,255,255))
+    screen.blit(player1,(850,16))
 
     player2 = gulimfont.render("player2 : ",True,(255,255,255))
-    player2_bd = gulimmini.render(str(player2_build),True,(255,255,255))
-
-
-        
-    screen.blit(player1,(850,16))
     screen.blit(player2,(850,156))
-    #screen.blit(player3,(850,306))
-    #screen.blit(player4,(850,456))
+
+    #플레이어 자산 표시
+    player1_asset = player.game_font.render(('$'+str(int(character1_asset))),True,(255,255,255))
+    screen.blit(player1_asset,(850,50))
+
+    player2_asset = player.game_font.render(('$'+str(int(character2_asset))),True,(255,255,255))
+    screen.blit(player2_asset,(850,190))
+
+    
+    
+    #플레이어가 가지고 있는 건물 
+    player1_b =  gulimmini.render(("Player1"),True,(200,0,0)) 
+    screen.blit(player1_b,(150,525))
+    
+    player1_bd = gulimmini.render(str(player1_build),True,(255,255,255)) 
     screen.blit(player1_bd,(150,550))
-    screen.blit(player2_bd,(150,650))
-    #screen.blit(player3_bd,(810,336))
-    #screen.blit(player4_bd,(810,486))
+    
+    
+    player2_b =  gulimmini.render(("Player2"),True,(255,255,0)) 
+    screen.blit(player2_b,(150,590))
+    
+    player2_bd = gulimmini.render(str(player2_build),True,(255,255,255))
+    screen.blit(player2_bd,(150,615))
+    
+
+
         
+    
+    
+    # 모인 세금 표시
+    total_tax1 = gulimfont.render(('total tax : $'+str(int(total_tax))),True,(255,255,255))
+    screen.blit(total_tax1,(830, 600))    
         
 
     #플레이어 우승목표 자산
@@ -523,19 +649,11 @@ while running:
     #부동산 표시
     estate = player.game_font.render("Player's estates",True,(0,0,0),(255,255,255))
     screen.blit(estate,(250,465))
-
-        
-    #플레이어 자산 표시
-    player1_asset = player.game_font.render(('$'+str(int(character1_asset))),True,(255,255,255))
-    screen.blit(player1_asset,(850,50))
-
-    player2_asset = player.game_font.render(('$'+str(int(character2_asset))),True,(255,255,255))
-    screen.blit(player2_asset,(850,190))
+       
+    
 
 
-    # 모인 세금 표시
-    total_tax1 = gulimfont.render(('total tax : $'+str(int(total_tax))),True,(255,255,255))
-    screen.blit(total_tax1,(830, 600))
+    
         
 
     #주사위 위치
@@ -551,6 +669,7 @@ while running:
         screen.blit(dice_5, (500,330))
     elif dice == 6:
         screen.blit(dice_6, (500,330))
+
 
 
 
