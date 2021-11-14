@@ -174,7 +174,13 @@ turn = 1
 
 #지금까지 총 턴
 turn_number = 0
-    
+
+
+visit_1 = 0
+visit_2 = 0
+visit_3 = 0
+visit_4 = 0
+visit_5 = 0
 pg.display.init()
 '''
 pg.mixer.init()
@@ -267,7 +273,37 @@ while running:
                     total_tax = 0
 
                 
-                
+                #월급
+                elif p1_move == 0:
+                    character1_asset += 100
+
+                elif p1_move == 1:
+                    
+                    if dice >= 2:
+                        character1_asset += 100
+
+                elif p1_move == 2:
+                    
+                    if dice >= 3:
+                        character1_asset += 100
+
+                elif p1_move == 3:
+                    
+                    if dice >= 4:
+                        character1_asset += 100
+
+                elif p1_move == 4:
+                    
+                    if dice >= 5:
+                        character1_asset += 100
+
+
+                elif p1_move == 5:
+                    
+                    if dice == 6:
+                        character1_asset += 100
+
+
                 turn = 2
                     
 
@@ -302,24 +338,52 @@ while running:
 
                     character2_x_pos = map[p2_move][0]+30
                     character2_y_pos = map[p2_move][1]
-
-                    
-
                 elif p2_move == 12:
                     go_to_prison_2p = True
                     prison_count_2p = 2
 
+                
                 #학생회비
                 elif p2_move == 18:
                     total_tax += character2_asset *3 / 100
                     character2_asset = character2_asset*97/100    
+                
                 
                 #모인 학생회비 얻기
                 elif p2_move == 6:
                     character2_asset += total_tax
                     total_tax = 0
 
+
+                #월급
+                elif p2_move == 0:
+                    character2_asset += 100
+
+                elif p2_move == 1:
                     
+                    if dice >= 2:
+                        character2_asset += 100
+
+                elif p2_move == 2:
+                    
+                    if dice >= 3:
+                        character2_asset += 100
+
+                elif p2_move == 3:
+                    
+                    if dice >= 4:
+                        character2_asset += 100
+
+                elif p2_move == 4:
+                    
+                    if dice >= 5:
+                        character2_asset += 100
+
+
+                elif p2_move == 5:
+                    
+                    if dice == 6:
+                        character2_asset += 100   
                 
                 
                 
