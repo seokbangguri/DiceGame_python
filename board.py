@@ -457,7 +457,7 @@ while running:
                                 sum_2 += map_price[l]
                                 if (sum_2 + character2_asset) < map_price[p2_move]/2:
                                     
-                                    winner = 'player2  is'
+                                    winner = 'player1  is'
                                     import ending
                                     running = False
                                 
